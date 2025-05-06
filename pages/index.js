@@ -166,7 +166,7 @@ export default function Home() {
                 <li><strong>Open:</strong> Freely available without licensing fees.</li>
                 <li><strong>Architecture:</strong> Operates on a Master/Slave principle.</li>
                 <li><strong>Versions:</strong> Exists for serial lines (Modbus RTU/ASCII) and Ethernet networks (Modbus TCP).</li>
-                <li><strong>OSI/TCP/IP Layer:</strong> It's an Application Layer protocol.</li>
+                <li><strong>OSI/TCP/IP Layer:</strong> It&aposs an Application Layer protocol.</li>
                 <li><strong>Simplicity:</strong> Considered relatively easy to implement and configure.</li>
             </ul>
         </div>
@@ -230,7 +230,7 @@ export default function Home() {
             <ul>
                 <li><strong>Decimal (DEC):</strong> The base-10 system we use daily (0-9).</li>
                 <li><strong>Binary (BIN):</strong> The base-2 system computers use (0-1). Often prefixed with <code>{'0b'}</code>. Example: <code>{'0b1101'}</code> = 13 dec.</li>
-                <li><strong>Hexadecimal (HEX):</strong> The base-16 system, using digits 0-9 and letters A-F (representing 10-15). Often prefixed with <code>{'0x'}</code> or followed by {'h'}. It's commonly used because it compactly represents bytes (one byte = two hex digits, e.g., <code>{'0xFF'}</code> = 255 dec = <code>{'0b11111111'}</code> bin).</li>
+                <li><strong>Hexadecimal (HEX):</strong> The base-16 system, using digits 0-9 and letters A-F (representing 10-15). Often prefixed with <code>{'0x'}</code> or followed by {'h'}. It&aposs commonly used because it compactly represents bytes (one byte = two hex digits, e.g., <code>{'0xFF'}</code> = 255 dec = <code>{'0b11111111'}</code> bin).</li>
             </ul>
             <p><strong>Simple Conversion Reference (0-15):</strong></p>
             <table>
@@ -296,7 +296,7 @@ export default function Home() {
         </div>
          <div className="content-section" key="rtu-examples">
              <h2>Modbus RTU Request/Response Examples</h2>
-               <p>Let's look at some examples of Modbus RTU communication (CRC values are shown symbolically as <code>{'[CRC]'}</code>).</p>
+               <p>Let&aposs look at some examples of Modbus RTU communication (CRC values are shown symbolically as <code>{'[CRC]'}</code>).</p>
              <hr />
              <h3>Example 1: Read Coils (Function Code 01)</h3>
              <p><strong>Scenario</strong> (from Slide 17): Request the status of 13 coils, starting from address <code>{'00010'}</code> (decimal 10, 0-based address <code>{'000A'}</code> hex), from the device with Slave ID <code>{'04'}</code>.</p>
