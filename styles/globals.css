@@ -1,42 +1,685 @@
+/* 1. Fonts - Using system fonts for clean look & performance */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  /* 2. Colors - v0 inspired palette: White/Gray background, Black/Gray text, Orange accent */
+  --color-bg: #ffffff; /* White background */
+  --color-grid: #e5e7eb; /* Light gray for grid lines */
+  --color-text-primary: #111827; /* Very dark gray (near black) for text */
+  --color-text-secondary: #4b5563; /* Medium gray for secondary text */
+  --color-text-tertiary: #9ca3af; /* Lighter gray for tertiary text (small, etc) */
+  --color-accent: #f97316; /* Bright Orange */
+  --color-accent-hover: #ea580c; /* Darker Orange */
+  --color-border: #d1d5db; /* Gray for borders */
+  --color-code-bg: #f3f4f6; /* Light gray background for code */
+  --color-code-text: #111827;
+  --color-table-header-bg: #f9fafb;
+  --color-table-border: var(--color-border);
+  /* SVG Colors */
+  --color-cable: #9ca3af; /* Gray for cables */
+  --color-signal-1: var(--color-accent); /* Orange for signal 1 */
+  --color-signal-2: var(--color-text-secondary); /* Gray for signal 2 */
+  /* Error Colors */
+  --color-error-text: #dc3545; /* Red */
+  --color-error-bg: #f8d7da;
+  --color-error-border: #f5c6cb;
+  --color-error-focus-shadow: rgba(220, 53, 69, 0.25);
+   /* Success Colors */
+  --color-success-border: #198754; /* Green */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-html,
+/* Basic reset and body styling */
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+font-family: var(--font-sans);
+background-color: var(--color-bg);
+/* Simple Grid Background */
+background-image:
+  repeating-linear-gradient(to bottom, var(--color-grid) 0, var(--color-grid) 1px, transparent 1px, transparent 30px),
+  repeating-linear-gradient(to right, var(--color-grid) 0, var(--color-grid) 1px, transparent 1px, transparent 30px);
+background-size: 30px 30px; /* Grid cell size */
+color: var(--color-text-primary);
+line-height: 1.65; /* Slightly more line height */
+margin: 0;
+padding: 0;
+overflow-x: hidden;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* SVG Background Elements */
+#cables-svg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
+#cables-svg path {
+  fill: none;
+  stroke: var(--color-cable);
+  stroke-width: 2px;
+  stroke-linecap: round;
+}
+#signal-1 {
+  fill: var(--color-signal-1);
+  filter: drop-shadow(0 0 3px var(--color-signal-1));
+  opacity: 0;
+}
+#signal-2 {
+  fill: var(--color-signal-2);
+  filter: drop-shadow(0 0 3px var(--color-signal-2));
+  opacity: 0;
 }
 
-* {
+/* Logo */
+.site-logo {
+  display: block;
+  position: relative;
+  z-index: 1;
+  width: auto;
+  height: 55px;
+  margin: 25px auto 15px auto;
+}
+
+/* Main Content Container */
+.container {
+max-width: 850px; /* Slightly narrower */
+margin: 0 auto 40px auto;
+padding: 35px 45px; /* Adjust padding */
+background-color: var(--color-bg); /* White, opaque */
+border: 1px solid var(--color-border); /* Subtle border */
+border-radius: 8px;
+box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Very subtle shadow */
+position: relative;
+z-index: 1;
+}
+
+/* Typography */
+h1, h2, h3 {
+font-family: var(--font-sans);
+font-weight: 700;
+color: var(--color-text-primary);
+letter-spacing: -0.02em; /* Slightly tighter spacing */
+}
+h1.main-heading {
+  color: var(--color-text-primary);
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 40px;
+  font-size: 2.25em;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+  text-shadow: none;
+}
+h1.main-heading span { display: inline-block; } /* For animation */
+
+h2 {
+color: var(--color-accent); /* Orange for H2 */
+border-bottom: 1px solid var(--color-border); /* Lighter border */
+padding-bottom: 8px;
+margin-top: 45px; /* More space before sections */
+margin-bottom: 20px;
+font-size: 1.5em; /* Adjust size */
+opacity: 0; /* Initially hidden for scroll animation */
+}
+h3 {
+color: var(--color-text-primary); /* Dark for H3 */
+margin-top: 30px;
+margin-bottom: 15px;
+font-size: 1.25em; /* Adjust size */
+font-weight: 600;
+}
+p {
+font-size: 1rem; /* Standard size */
+color: var(--color-text-secondary);
+margin-top: 0; /* Remove default top margin */
+margin-bottom: 1.25em; /* Consistent bottom margin */
+}
+.content-section {
+margin-bottom: 35px;
+}
+
+/* Lists */
+ul { background-color: transparent; padding: 0; border: none; list-style: none; margin-left: 0; margin-top: 1em; }
+li {
+margin-bottom: 0.75em;
+padding-left: 22px; /* Adjust padding */
+position: relative;
+color: var(--color-text-secondary);
+}
+/* Orange marker */
+li::before {
+content: '';
+position: absolute;
+left: 0;
+top: 0.6em; /* Adjust vertical alignment */
+width: 6px;
+height: 6px;
+background-color: var(--color-accent);
+border-radius: 50%;
+}
+
+/* Links */
+a { color: var(--color-accent); text-decoration: none; transition: color 0.2s ease; }
+a:hover { color: var(--color-accent-hover); }
+
+/* Strong */
+strong { color: var(--color-text-primary); font-weight: 700; }
+
+/* Code blocks */
+code {
+background-color: var(--color-code-bg);
+color: var(--color-code-text);
+padding: 0.2em 0.4em;
+margin: 0 1px;
+font-size: 0.9em;
+border-radius: 4px;
+font-family: var(--font-mono);
+border: 1px solid var(--color-border);
+}
+/* Better code style inside lists/paragraphs */
+p code, li code { font-size: 0.875em; }
+/* Style for multiline code block imitation */
+ul ul {
+  margin-left: 0;
+  margin-top: 0.5em;
+  list-style-type: none;
+  background-color: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  padding: 10px 15px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  line-height: 1.5;
+}
+ul ul li { margin-bottom: 0; padding-left: 0; color: var(--color-code-text);}
+ul ul li::before { display: none; } /* Hide markers for code lines */
+
+
+/* Horizontal Rule */
+hr { border: 0; height: 1px; background-color: var(--color-border); margin: 40px 0; }
+
+/* Tables */
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 1.5em;
+margin-bottom: 1.5em;
+font-size: 0.9em;
+background-color: transparent;
+border: 1px solid var(--color-table-border);
+}
+th, td {
+border: 1px solid var(--color-table-border);
+padding: 8px 10px; /* Adjust padding */
+text-align: left;
+color: var(--color-text-secondary);
+}
+th {
+background-color: var(--color-table-header-bg);
+color: var(--color-text-primary);
+font-weight: 600; /* Less bold header */
+font-family: var(--font-sans);
+}
+tbody tr { /* Remove striping for minimalism */
+  background-color: transparent;
+}
+/* Center align specific columns */
+th:nth-child(n+2):nth-child(-n+4), /* Columns 2, 3, 4 */
+td:nth-child(n+2):nth-child(-n+4) {
+  text-align: center;
+}
+td code, th code { font-size: 0.95em; } /* Adjust code size in tables */
+
+/* Small text */
+small { color: var(--color-text-tertiary); font-size: 0.85em; display: block; margin-top: 6px; }
+
+
+/* --- CRC Calculator Styles --- */
+.calculator-area {
+  margin-top: 15px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background-color: var(--color-table-header-bg);
+}
+.calculator-area label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.calculator-area textarea {
+  display: block;
+  width: 100%;
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  resize: vertical;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+}
+#calculate-crc-btn {
+  display: inline-block;
+  padding: 10px 18px;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--color-accent);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 5px;
+}
+#calculate-crc-btn:hover {
+  background-color: var(--color-accent-hover);
+}
+#crc-result, #crc-result-be {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: var(--color-code-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 0.95em;
+  color: var(--color-text-secondary);
+  transition: border-color 0.3s ease; /* Added transition */
+}
+#crc-result span.crc-value, #crc-result-be span.crc-value-be {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  background-color: #fff;
+  padding: 2px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--color-border);
+}
+#crc-result-be {
+   margin-top: 10px;
+}
+/* Style for successful CRC calculation */
+#crc-result.success, #crc-result-be.success {
+  border-color: var(--color-success-border);
+}
+/* Style for failed CRC calculation */
+#crc-result.error, #crc-result-be.error {
+  border-color: var(--color-error-border);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+
+/* --- Message Constructor Styles --- */
+#message-constructor-section .tool-area {
+  margin-top: 15px;
+  padding: 20px 25px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background-color: var(--color-table-header-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+/* Row with controls */
+.tool-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between groups in a row */
+  align-items: flex-end; /* Align to bottom edge */
+}
+/* Group label + control */
+.tool-group {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Allow growing */
+  min-width: 180px; /* Minimum width */
+  gap: 5px; /* Space between label and input */
+}
+.tool-group.full-width {
+   min-width: 100%;
+   flex-basis: 100%;
+}
+.tool-area label {
+  font-weight: 600;
+  font-size: 0.85em;
+  color: var(--color-text-secondary);
+  padding-left: 2px; /* Small indent */
+}
+/* Common styles for input/select/textarea */
+.tool-area input[type="text"],
+.tool-area input[type="number"],
+.tool-area select,
+.tool-area textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 12px; /* Padding */
+  font-family: var(--font-sans);
+  font-size: 0.95em;
+  line-height: 1.5; /* For height */
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.tool-area input[type="text"]:focus,
+.tool-area input[type="number"]:focus,
+.tool-area select:focus,
+.tool-area textarea:focus {
+  outline: none;
+  border-color: var(--color-accent); /* Orange border on focus */
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2); /* Orange glow */
+}
+.tool-area input[type="number"],
+.tool-area textarea {
+   font-family: var(--font-mono); /* Monospace */
+}
+.tool-area textarea { resize: vertical; }
+.tool-area select { cursor: pointer; }
+.tool-area input::placeholder,
+.tool-area textarea::placeholder {
+   color: var(--color-text-tertiary);
+   font-size: 0.9em;
+}
+/* Constructor Button */
+#construct-message-btn {
+  padding: 10px 18px;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--color-accent);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  align-self: flex-start;
+  margin-top: 10px;
+}
+#construct-message-btn:hover { background-color: var(--color-accent-hover); }
+
+/* Container for dynamic parameters */
+#function-params-container {
+  margin-top: 10px;
+  padding-top: 15px;
+  border-top: 1px dashed var(--color-border);
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* Output Area */
+.output-area {
+  margin-top: 15px;
+}
+.output-area label { /* Label for Generated Frame */
+   display: block;
+   margin-bottom: 5px;
+   font-weight: 600;
+   font-size: 0.85em;
+   color: var(--color-text-secondary);
+}
+.frame-output-wrapper {
+  position: relative; /* For positioning copy button */
+}
+#message-output { /* Textarea for frame */
+  background-color: var(--color-code-bg);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+  min-height: 70px; /* Adjusted height */
+  white-space: pre; /* Preserve spaces */
+  word-wrap: break-word; /* Wrap long lines */
+  font-family: var(--font-mono);
+  font-size: 0.95em; /* Match other inputs */
+  transition: border-color 0.3s ease; /* Added transition */
+}
+#message-output:read-only { cursor: text; }
+#copy-frame-btn {
+  position: absolute;
+  top: 5px; /* Position near top-right of textarea */
+  right: 5px;
+  padding: 2px 6px;
+  font-size: 0.75em;
+  background-color: var(--color-text-secondary);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, background-color 0.2s ease;
+  /* visibility: hidden; Managed by JS */
+}
+#copy-frame-btn:hover { opacity: 1; }
+#copy-frame-btn.copied { background-color: var(--color-success-border); opacity: 1; } /* Style when copied */
+
+/* Frame Breakdown Styles */
+.message-breakdown {
+  margin-top: 15px;
+  padding: 12px 15px;
+  border: 1px dashed var(--color-border);
+  border-radius: 4px;
+  background-color: #f8f9fa; /* Very light background */
+  font-size: 0.9em;
+  line-height: 1.4; /* Ensure readability */
+}
+.message-breakdown h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+#breakdown-content span {
+  display: inline-block;
+  margin-right: 8px;
+  margin-bottom: 5px;
+  padding: 3px 6px;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.95em;
+  border: 1px solid transparent;
+}
+/* Styles for different parts of the frame */
+#breakdown-content .bd-label { /* Label like "Slave ID:" */
+  font-weight: 600;
+  font-family: var(--font-sans);
+  background-color: transparent;
+  padding-left: 0;
+  margin-right: 2px;
+}
+#breakdown-content .bd-tid { background-color: #e0e7ff; border-color: #c7d2fe; } /* Bluish */
+#breakdown-content .bd-pid { background-color: #e0e7ff; border-color: #c7d2fe; }
+#breakdown-content .bd-len { background-color: #e0e7ff; border-color: #c7d2fe; }
+#breakdown-content .bd-uid { background-color: #fef3c7; border-color: #fde68a; } /* Yellowish */
+#breakdown-content .bd-sid { background-color: #fef3c7; border-color: #fde68a; }
+#breakdown-content .bd-fc  { background-color: #d1fae5; border-color: #a7f3d0; } /* Greenish */
+#breakdown-content .bd-addr { background-color: #fee2e2; border-color: #fecaca; } /* Reddish */
+#breakdown-content .bd-qty  { background-color: #fee2e2; border-color: #fecaca; }
+#breakdown-content .bd-bcount{ background-color: #fee2e2; border-color: #fecaca; }
+#breakdown-content .bd-val { background-color: #e5e7eb; border-color: #d1d5db; } /* Grayish */
+#breakdown-content .bd-crc { background-color: #fae8ff; border-color: #f5d0fe; } /* Purplish */
+#breakdown-content .bd-err { background-color: var(--color-error-bg); border-color: var(--color-error-border); color: var(--color-error-text);} /* Error */
+
+/* Error message and validation styles */
+.error-message {
+  color: var(--color-error-text);
+  font-size: 0.9em;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: var(--color-error-bg);
+  border: 1px solid var(--color-error-border);
+  border-radius: 4px;
+}
+/* Add !important to ensure override */
+.validation-input.input-error {
+  border-color: var(--color-error-border) !important;
+  background-color: var(--color-error-bg) !important;
+}
+.validation-input.input-error:focus {
+  box-shadow: 0 0 0 2px var(--color-error-focus-shadow) !important;
+}
+
+
+/* --- Basic Responsiveness --- */
+@media (max-width: 768px) {
+  .container {
+      padding: 25px 20px; /* Reduce padding on narrow screens */
   }
+  h1.main-heading {
+      font-size: 1.8em; /* Reduce heading size */
+      margin-bottom: 30px;
+  }
+  h2 {
+      font-size: 1.3em;
+  }
+  .tool-area {
+      padding: 15px; /* Reduce padding */
+  }
+  .tool-row {
+      flex-direction: column; /* Stack elements vertically */
+      align-items: stretch; /* Stretch items to full width */
+      gap: 15px; /* Reduce gap */
+  }
+  .tool-group {
+      min-width: 100%; /* Take full width */
+  }
+   #crc-result, #crc-result-be { padding: 10px; } /* Adjust padding */
+}
+
+@media (max-width: 480px) {
+   body {
+       background-size: 40px 40px; /* Optional: Larger background grid */
+   }
+  .container {
+      padding: 20px 15px;
+      margin: 0 5px 20px 5px; /* Add small horizontal margin */
+      width: auto; /* Ensure it doesn't overflow */
+      border: none; /* Remove border on very small screens */
+      box-shadow: none;
+  }
+   h1.main-heading {
+      font-size: 1.6em;
+  }
+  /* Reduce fonts further */
+  p, li, table { font-size: 0.9rem; }
+  code { font-size: 0.8em;}
+  p code, li code { font-size: 0.775em; }
+  .tool-area label { font-size: 0.8em; }
+  .tool-area input, .tool-area select, .tool-area textarea { font-size: 0.9em; padding: 6px 10px;}
+  #message-output { min-height: 60px; }
+  .message-breakdown { font-size: 0.85em; padding: 10px; }
+  #breakdown-content span { font-size: 0.9em; padding: 2px 5px; margin-right: 5px;}
+  #calculate-crc-btn, #construct-message-btn { font-size: 0.9em; padding: 8px 14px;}
+}
+/* Необязательно: добавить отступ под селектом шаблонов */
+#msg-template {
+  margin-bottom: 10px; /* Добавляет небольшой отступ снизу */
+}
+/* --- Стили для Квиза --- */
+.quiz-section {
+  margin-top: 40px; /* Отступ сверху от предыдущей секции */
+  margin-bottom: 35px; /* Стандартный отступ снизу */
+  padding: 20px 25px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background-color: #f9fafb; /* Слегка другой фон */
+}
+
+.quiz-section h3 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 10px;
+  color: var(--color-accent); /* Оранжевый заголовок квиза */
+  font-size: 1.3em;
+}
+
+.quiz-question {
+  margin-bottom: 25px; /* Отступ между вопросами */
+}
+
+.quiz-question p {
+  margin-bottom: 10px; /* Отступ под текстом вопроса */
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.quiz-options label {
+  display: block; /* Каждый вариант с новой строки */
+  margin-bottom: 8px;
+  cursor: pointer;
+  padding: 5px 8px; /* Небольшие внутренние отступы для кликабельности */
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  border: 1px solid transparent; /* Для рамки при ответе */
+}
+
+.quiz-options label:hover {
+  background-color: #f0f0f0; /* Легкая подсветка при наведении */
+}
+
+.quiz-options input[type="radio"] {
+  margin-right: 8px;
+  vertical-align: middle; /* Выровнять по центру с текстом */
+}
+
+/* Стили для обратной связи по ответам */
+.quiz-options label.correct {
+  background-color: #d1fae5; /* Зеленоватый фон */
+  border-color: #a7f3d0;
+  font-weight: bold;
+}
+
+.quiz-options label.incorrect {
+  background-color: #fee2e2; /* Красноватый фон */
+  border-color: #fecaca;
+}
+
+
+.quiz-feedback { /* Отзыв под вариантами (если нужен) */
+  font-size: 0.9em;
+  margin-top: 8px;
+  min-height: 1.2em; /* Чтобы не прыгал макет */
+}
+.quiz-feedback.correct { color: #065f46; }
+.quiz-feedback.incorrect { color: #991b1b; }
+
+
+.check-quiz-btn {
+  /* Используем стили похожие на другие кнопки */
+  display: inline-block;
+  padding: 10px 18px;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: var(--color-accent);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 10px; /* Отступ от последнего вопроса */
+}
+
+.check-quiz-btn:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.quiz-results {
+  margin-top: 20px;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 4px;
+  min-height: 1.5em;
+}
+.quiz-results.pass {
+   background-color: #d1fae5;
+   color: #065f46;
+   border: 1px solid #a7f3d0;
+}
+.quiz-results.fail {
+   background-color: #fee2e2;
+   color: #991b1b;
+   border: 1px solid #fecaca;
 }

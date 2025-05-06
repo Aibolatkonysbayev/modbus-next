@@ -1,0 +1,55 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Next.js build output
+/.next/
+/out/
+
+# Production build artifacts
+# /build # Раскомментируйте, если используете кастомный build dir
+
+# Static exports
+# /export
+
+# Miscellaneous
+.DS_Store
+*.pem
+
+# Environment variables
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+# Не добавляйте .env файл, если он не содержит секретов!
+# .env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Optional local settings
+/.vercel
+*.tsbuildinfo
+next-env.d.ts
